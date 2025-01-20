@@ -1,9 +1,16 @@
 var express = require('express');
 var router = express.Router();
 var cookieParser = require('cookie-parser');
-
 router.use(cookieParser());
-
+/**
+ * GET route for password set.
+ *
+ * @name GET /
+ * @function
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ */
 router.get('/', function(req, res, next) {
   const registeredDetails = req.cookies['Credintials'];
   if (registeredDetails) {
@@ -13,7 +20,14 @@ router.get('/', function(req, res, next) {
     res.redirect('/')
   }
 });
-
+/**
+ * POST route for handling user password creation.
+ *
+ * @name POST /
+ * @function
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 router.post('/', function(req, res, next) {
   const registeredDetails = req.cookies['Credintials'];
   if (!registeredDetails)
@@ -32,14 +46,24 @@ router.post('/', function(req, res, next) {
       var firstName = userDetails['firstName']
       var lastName = userDetails['lastName']
       var Email = userDetails['Email']
-      const newUser = { Email,firstName,lastName, password: password_1};
-      // Add to DB
-      global.users.push(newUser);
-      console.log(global.users);
-      res.clearCookie('Credintials');
-      res.render('details', { title: 'Register', errorMessage: null , user: null, registered: "You are registered!"});
+      current = {Email, firstName, lastName}
+      const emailExists = global.users.some(user => user.Email === Email);
+      if (emailExists) {    
+        res.render('details', {
+        title: 'Registration Error',
+        errorMessage: 'This email is already in use, please choose another one.',
+        user: current,
+        registered: null,
+        });
+      }
+      else{
+        const newUser = { Email,firstName,lastName, password: password_1};
+        global.users.push(newUser);
+        console.log(global.users);
+        res.clearCookie('Credintials');
+        res.render('details', { title: 'Register', errorMessage: null , user: null, registered: "You are registered!"});
+      }
     }
   }
 });
-
 module.exports = router;
