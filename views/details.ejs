@@ -5,14 +5,12 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1>Please Register Here 🙆🏻</h1>
-    
-    <% if (userDetails) { %>
-      <h1><%= userDetails['First Name'] %></h1>
+    <h1>Please Register Here 🖋️</h1>
+    <% if (locals.user) { %>
       <form action="/" method="POST">
         <div>
           <label id="lb">Email Address</label>
-          <input type="email" name="Email" value="<%= userDetails.Email %>" required minlength="3" maxlength="32"></input>
+          <input type="email" name="Email" value="<%= locals.user.Email %>" required minlength="3" maxlength="32"></input>
         </div>
         <% if (locals.errorMessage) { %>
           <h5 id="error"><%= locals.errorMessage %></h5>
@@ -20,12 +18,12 @@
         <br>
         <div>
           <label id="lb">First Name</label>
-          <input type="text" name="First Name" value="<%= userDetails['First Name'] %>" required minlength="3" maxlength="32"></input>
+          <input type="text" name="First Name" value="<%= locals.user.firstName %>" required minlength="3" maxlength="32"></input>
         </div>
         <br>
         <div>
           <label id="lb">Last Name</label>
-          <input type="text" name="Last Name" value="<%= userDetails['Last Name'] %>" required minlength="3" maxlength="32"></input>
+          <input type="text" name="Last Name" value="<%= locals.user.lastName %>" required minlength="3" maxlength="32"></input>
         </div>
         <br>
         <div>
@@ -33,7 +31,6 @@
         </div>
       </form>
     <% } else { %>
-      <h1>No Cookies!</h1>
       <form action="/" method="POST">
         <div>
           <label id="lb">Email Address</label>
@@ -57,6 +54,11 @@
           <button type="submit" id="login_details" name="done">Submit</button>
         </div>
       </form>
+      <% if (locals.registered) { %>
+        <br>
+        <h5 style="color: green;"><%= locals.registered %></h5>
+      <% } %>
+
     <% } %>
   </body>
 </html>

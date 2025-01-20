@@ -11,7 +11,7 @@ a {
 }
 .topnav {
   overflow: hidden;
-  background-color: #121113;
+  background-color: #414141;
   margin: 0;
 }
 .topnav a {
@@ -59,7 +59,7 @@ a {
 }
 
 body {
-    background: #121113;
+    background: #414141;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -97,7 +97,7 @@ span {
 }
 
 a {
-  color: #333;
+  color: #414141;
   font-size: 14px;
   text-decoration: none;
   margin: 15px 0;
@@ -130,7 +130,6 @@ button.ghost {
 }
 
 form {
-  background-color: #121113;
   color: #FFFFFF;
   display: flex;
   align-items: center;
