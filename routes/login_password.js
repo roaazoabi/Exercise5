@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const users_module = require('./users'); 
 var cookieParser = require('cookie-parser');
 router.use(cookieParser());
 /**
@@ -17,7 +18,7 @@ router.get('/', function(req, res, next) {
     res.render('password', { title: 'Password', errorMessage: null });
   } 
   else {
-    res.redirect('/')
+    res.redirect('/');
   }
 });
 /**
@@ -31,7 +32,7 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
   const registeredDetails = req.cookies['Credintials'];
   if (!registeredDetails)
-    res.render('details', { title: 'Register', errorMessage: null , user: null, registered: null});
+    res.redirect('/');
   else {
     const { password_1, password_2 } = req.body;
     if (password_1 !== password_2) {
@@ -47,7 +48,7 @@ router.post('/', function(req, res, next) {
       var lastName = userDetails['lastName']
       var Email = userDetails['Email']
       current = {Email, firstName, lastName}
-      const emailExists = global.users.some(user => user.Email === Email);
+      const emailExists = users_module.getUsers().some(user => user.Email === Email);
       if (emailExists) {    
         res.render('details', {
         title: 'Registration Error',
@@ -58,12 +59,13 @@ router.post('/', function(req, res, next) {
       }
       else{
         const newUser = { Email,firstName,lastName, password: password_1};
-        global.users.push(newUser);
-        console.log(global.users);
-        res.clearCookie('Credintials');
+        users_module.addUser(newUser);
         res.render('details', { title: 'Register', errorMessage: null , user: null, registered: "You are registered!"});
       }
     }
   }
+});
+router.post('/back', function(req, res, next) {
+  res.redirect('/');
 });
 module.exports = router;

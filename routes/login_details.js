@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var cookieParser = require('cookie-parser');
-
+const users_module = require('./users'); 
 // ------------------------------- Here is the cookie timer in seconds ----------------------------------------------------------
 const REGISTER = 30; 
 router.use(cookieParser());
@@ -42,12 +42,12 @@ router.get('/', function(req, res, next) {
  * @param {Object} res - Express response object
  */
 router.post('/', function (req, res) {
-  var { Email, "First Name": firstName, "Last Name": lastName } = req.body;
+  var { "Email": Email, "First Name": firstName, "Last Name": lastName } = req.body;
   Email = Email.trim();
   firstName = firstName.trim();
   lastName = lastName.trim();
   current = {Email, firstName, lastName}
-  const emailExists = global.users.some(user => user.Email === Email);
+  const emailExists = users_module.getUsers().some(user => user.Email === Email);
   const registeredDetails = req.cookies['Credintials'];
   if (emailExists) {
     res.render('details', {

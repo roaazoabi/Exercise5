@@ -1,9 +1,9 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-global.users = [];  
 var login_details = require('./routes/login_details');
 var login_password = require('./routes/login_password');
 var app = express();
@@ -15,9 +15,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(cookieParser());
+
 app.use('/', login_details);
 app.use('/password', login_password);
+
 app.use(function(req, res, next) {
   next(createError(404));
 });
