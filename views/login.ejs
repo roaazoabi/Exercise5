@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>Please Sign In Here 👇🏻</h1>
+      <form action="/" method="POST">
+        <div>
+          <label id="lb">Email Address</label>
+          <input type="email" name="Email" required minlength="3" maxlength="32"></input>
+        </div>
+        <br>
+        <div>
+            <label id="lb">Password</label>
+            <input type="password" name="Password" required minlength="3" maxlength="32"></input>
+        </div>
+        <% if (locals.errorMessage) { %>
+          <h5 id="error"><%= locals.errorMessage %></h5>
+        <% } %>
+        <div>
+            <button type="submit" id="login_details" name="done">Submit</button>
+        </div>
+      </form>
+      <br>
+      <div>
+        <form action="/register" method="GET">
+          <button type="submit">Register 🖊️</button>
+        </form>
+      </div>
+      <% if (locals.registered) { %>
+        <h5 style="color: green;"><%= locals.registered %></h5>
+      <% } %>
+  </body>
+</html>

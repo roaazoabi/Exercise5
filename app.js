@@ -4,8 +4,9 @@ var path = require('path');
 
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var login_details = require('./routes/login_details');
-var login_password = require('./routes/login_password');
+var register = require('./routes/register');
+var login = require('./routes/login');
+var password = require('./routes/password');
 var app = express();
 var cookieParser = require('cookie-parser');
 app.set('views', path.join(__dirname, 'views'));
@@ -18,8 +19,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cookieParser());
 
-app.use('/', login_details);
-app.use('/password', login_password);
+app.use('/', login);
+app.use('/register', register);
+app.use('/password', password);
 
 app.use(function(req, res, next) {
   next(createError(404));

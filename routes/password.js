@@ -50,7 +50,7 @@ router.post('/', function(req, res, next) {
       current = {Email, firstName, lastName}
       const emailExists = users_module.getUsers().some(user => user.Email === Email);
       if (emailExists) {    
-        res.render('details', {
+        res.render('register', {
         title: 'Registration Error',
         errorMessage: 'This email is already in use, please choose another one.',
         user: current,
@@ -58,14 +58,11 @@ router.post('/', function(req, res, next) {
         });
       }
       else{
-        const newUser = { Email,firstName,lastName, password: password_1};
+        const newUser = { Email,firstName,lastName, Password: password_1};
         users_module.addUser(newUser);
-        res.render('details', { title: 'Register', errorMessage: null , user: null, registered: "You are registered!"});
+        res.render('login', { title: 'Login', errorMessage: null, registered: "You are registered!"});
       }
     }
   }
-});
-router.post('/back', function(req, res, next) {
-  res.redirect('/');
 });
 module.exports = router;

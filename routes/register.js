@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
   if (registeredDetails) {
       const decodedData = decodeURIComponent(registeredDetails);
       const userDetails = JSON.parse(decodedData);
-      res.render('details', {
+      res.render('register', {
         title: 'Register',
         errorMessage: null,
         user: userDetails,
@@ -29,11 +29,11 @@ router.get('/', function(req, res, next) {
       });
   } 
   else {
-    res.render('details', { title: 'Register', errorMessage: null, user: null, registered: null });
+    res.render('register', { title: 'Register', errorMessage: null, user: null, registered: null });
   }
 });
 /**
- * POST route for handling user login.
+ * POST route for handling user registration.
  * Checks user input, checks for email uniqueness, and stores user details in a cookie.
  *
  * @name POST /
@@ -50,7 +50,7 @@ router.post('/', function (req, res) {
   const emailExists = users_module.getUsers().some(user => user.Email === Email);
   const registeredDetails = req.cookies['Credintials'];
   if (emailExists) {
-    res.render('details', {
+    res.render('register', {
         title: 'Registration Error',
         errorMessage: 'This email is already in use, please choose another one.',
         user: current,
@@ -58,7 +58,7 @@ router.post('/', function (req, res) {
     });
   } 
   else if (!firstName || !lastName){
-    res.render('details', {
+    res.render('register', {
       title: 'Registration Error',
       errorMessage: 'Some Information are missing!',
       user: current,
