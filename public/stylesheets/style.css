@@ -10,9 +10,8 @@ a {
   color: #00B7FF;
 }
 .topnav {
-  overflow: hidden;
   background-color: #414141;
-  margin: 0;
+  margin-bottom: 10px;
 }
 .topnav a {
   float: left;
@@ -248,4 +247,19 @@ input {
 #error {
   font-weight: 800;
   color: red;
+}
+.message {
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.message p {
+  margin: 0;
+}
+.message small {
+  display: block;
+  margin-top: 5px;
+  color: #555;
 }

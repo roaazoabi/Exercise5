@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const users_module = require('./users'); 
-var cookieParser = require('cookie-parser');
-router.use(cookieParser());
+const users_module = require('../models/users.js'); 
 /**
  * GET route for password set.
  *

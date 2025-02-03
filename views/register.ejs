@@ -27,12 +27,9 @@
         </div>
         <br>
         <div>
-          <button type="submit" id="login_details" name="done">Submit</button>
+          <button type="submit" id="" name="done">Submit</button>
         </div>
         <br>
-        <form action="/" method="GET">
-          <button type="submit">Log In 👇🏻</button>
-        </form>
       </form>
     <% } else { %>
       <form action="/register" method="POST">
@@ -55,16 +52,16 @@
         </div>
         <br>
         <div>
-          <button type="submit" id="login_details" name="done">Submit</button>
+          <button type="submit" id="" name="done">Submit</button>
         </div>
       </form>
-      <br>
-      <form action="/" method="GET">
-        <button type="submit">Log In 👇🏻</button>
-      </form>
-      <% if (locals.registered) { %>
-        <h5 style="color: green;"><%= locals.registered %></h5>
-      <% } %>
+    <% } %>
+    <br>
+    <form action="/" method="GET">
+      <button type="submit">Log In 👇🏻</button>
+    </form>
+    <% if (locals.registered) { %>
+      <h5 style="color: green;"><%= locals.registered %></h5>
     <% } %>
   </body>
 </html>

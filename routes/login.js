@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const users_module = require('./users'); 
-
+const users_module = require('../models/users.js'); 
 /**
  * GET route for login form.
  *
@@ -12,7 +11,10 @@ const users_module = require('./users');
  * @param {Function} next - Express next middleware function
  */
 router.get('/', function(req, res, next) {
-    res.render('login', { title: 'Login', errorMessage: null, registered: null });
+    if (req.session.user)
+        return res.redirect('/chat/read');
+    else
+        res.render('login', { title: 'Login', errorMessage: null, registered: null });
 });
 /**
  * POST route for handling user login.
@@ -24,21 +26,20 @@ router.get('/', function(req, res, next) {
  * @param {Object} res - Express response object
  */
 router.post('/', function (req, res) {
-  var { "Email": Email, "Password": password} = req.body;
+  var { "Email": Email, "Password": password } = req.body;
   Email = Email.trim();
   password = password.trim();
-  const emailExists = users_module.getUsers().some(user => user.Email === Email);
-  if (emailExists) {
-    const password_match = users_module.getUsers().some(user => user.Password === password);
-    if (password_match){
-      // Move to next page
-      res.render('login', { title: 'Login', errorMessage: null, registered: "You are registered!" });
-    }
-    else
-      res.render('login', { title: 'Login', errorMessage: "Wrong Password!", registered: null });
+  const user = users_module.getUsers().find(user => user.Email === Email);
+  if (user) {
+      if (user.Password === password) {
+          req.session.user = user;
+          res.redirect('/chat/read');
+      } 
+      else
+          res.render('login', { title: 'Login', errorMessage: "Wrong Password!", registered: null });
+      
   } 
-  else {
-    res.render('login', { title: 'Login', errorMessage: "No Such Registered Email!", registered: null });
-  }
+  else
+      res.render('login', { title: 'Login', errorMessage: "No Such Registered Email!", registered: null });
 });
 module.exports = router;

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+      </head>
+    <body>
+        <h1>Chat Room 💬</h1>
+        <h2>Welcome <b><%= locals.user.firstName %>👋🏻</b></h2>
+        <div class="topnav">
+            <a href="/chat/send">Send✏️</a>
+            <a href="/chat/read">Read📖</a>
+            <a class="active"  href="/chat/search">Search🔍</a>
+            <a href="/chat/logout">Logout📤</a>
+          </div>
+          <form action="/chat/search" method="POST">
+            <div>
+                <label id="lb">Search A Message 🔍</label>
+                <input type="text" name="Message" required minlength="3"></input>
+            </div>
+            <div>
+                <br>
+                <button type="submit" id="" name="done">Search</button>
+            </div>
+        </form>
+        <br>
+          <div>
+            <% if (messages) { %>
+                <% if (messages.length > 0) { %>
+                    <% messages.forEach(msg => { %>
+                        <div class="message">
+                            <p>
+                                <strong><%= msg.sender.firstName%> <%=msg.sender.lastName%></strong>
+                                <br>
+                                <%= msg.content %>
+                            </p>
+                            <small><i><%= msg.date %></i></small>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p style="color: white;">
+                        <strong>No Matching Results!</strong>
+                    </p>
+                <% } %>
+            <% } %>
+        </div>
+    </body>
+</html>

@@ -1,11 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var cookieParser = require('cookie-parser');
-const users_module = require('./users'); 
+const users_module = require('../models/users.js'); 
 // ------------------------------- Here is the cookie timer in seconds ----------------------------------------------------------
 const REGISTER = 30; 
-router.use(cookieParser());
-
 /**
  * GET route for displaying user details if stored in cookies.
  * If no cookie exists, renders a blank registration form.

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+      </head>
+    <body>
+        <h1>Chat Room 💬</h1>
+        <h2>Welcome <b><%= locals.user.firstName %>👋🏻</b></h2>
+        <div class="topnav">
+            <a class="active"  href="/chat/send">Send✏️</a>
+            <a href="/chat/read">Read📖</a>
+            <a href="/chat/search">Search🔍</a>
+            <a href="/chat/logout">Logout📤</a>
+          </div>
+        <form action="/chat/send" method="POST">
+            <div>
+                <label id="lb">Send A Message ✏️</label>
+                <input type="text" name="Message" required minlength="3"></input>
+            </div>
+            <div>
+                <br>
+                <button type="submit" id="" name="done">Send</button>
+            </div>
+        </form>
+    </body>
+</html>
