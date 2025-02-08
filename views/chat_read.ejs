@@ -62,11 +62,9 @@
                     body: JSON.stringify({ new_content: updatedContent })
                 })
                 .then(response => response.json())
-                .then(data => {
-                    alert("Message edited!");
-                    fetchMessages(); 
-                })
+                .then(data => {})
                 .catch(error => console.error('Error:', error));
+                location.reload();
             } 
             else {
                 let messageContent = paragraph.textContent;
@@ -87,11 +85,9 @@
                     method: 'DELETE',
                 })
                 .then(response => response.json())
-                .then(data => {
-                    alert("Message deleted!");
-                    fetchMessages(); 
-                })
+                .then(data => {})
                 .catch(error => console.error('Error:', error));
+                location.reload();
             });
         });
         }
