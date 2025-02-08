@@ -3,26 +3,38 @@
     <head>
         <title><%= title %></title>
         <link rel='stylesheet' href='/stylesheets/style.css' />
-      </head>
+    </head>
     <body>
         <h1>Chat Room 💬</h1>
         <h2>Welcome <b><%= locals.user.firstName %>👋🏻</b></h2>
         <div class="topnav">
             <a href="/chat/send">Send✏️</a>
-            <a class="active"  href="/chat/read">Read📖</a>
+            <a class="active" href="/chat/read">Read📖</a>
             <a href="/chat/search">Search🔍</a>
             <a href="/chat/logout">Logout📤</a>
         </div>
-        <div>
+        <div id="messages-container">
             <% if (messages.length > 0) { %>
                 <% messages.forEach(msg => { %>
-                    <div class="message">
+                    <div class="message" data-id="<%= msg.id %>">
                         <p>
-                            <strong><%= msg.sender.firstName%> <%=msg.sender.lastName%></strong>
+                            <strong><%= msg.sender.firstName%> <%= msg.sender.lastName %></strong>
                             <br>
-                            <%= msg.content %>
+                            <div id="message_container">
+                                <p id="message_content">
+                                    <%= msg.content %>
+                                </p>
+                            </div>
                         </p>
                         <small><i><%= msg.date %></i></small>
+                        <% if (msg.sender.Email === locals.user.Email) { %>
+                            <div>
+                                <div>
+                                    <button class="edit-btn" data-id="<%= msg.id %>">Edit ✏️</button>
+                                    <button class="delete-btn" data-id="<%= msg.id %>">Delete 🗑️</button>
+                                </div>
+                            </div>
+                        <% } %>
                     </div>
                 <% }) %>
             <% } else { %>
@@ -32,4 +44,100 @@
             <% } %>
         </div>
     </body>
+    <script>
+        function attachMessageEventListeners() {
+            document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+            let msgId = event.target.getAttribute('data-id');
+            let messageContainer = event.target.closest('.message');
+            let paragraph = messageContainer.querySelector('#message_content');
+            let inputTextbox = messageContainer.querySelector('input');
+            if (inputTextbox) {
+                let updatedContent = inputTextbox.value;
+                fetch(`/chat/edit/${msgId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ new_content: updatedContent })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert("Message edited!");
+                    fetchMessages(); 
+                })
+                .catch(error => console.error('Error:', error));
+            } 
+            else {
+                let messageContent = paragraph.textContent;
+                inputTextbox = document.createElement("input");
+                inputTextbox.type = "text";
+                inputTextbox.value = messageContent;
+                inputTextbox.id = "edited_message";
+                paragraph.replaceWith(inputTextbox);
+                inputTextbox.style.textAlign = "left";
+                inputTextbox.focus();
+            }
+            });
+        });
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                let msgId = event.target.getAttribute('data-id');
+                fetch(`/chat/delete/${msgId}`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert("Message deleted!");
+                    fetchMessages(); 
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+        }
+        function fetchMessages() {
+            fetch('/chat/fetch/')  
+                .then(response => response.json())
+                .then(data => {
+                    updateMessages(data.messages);
+                })
+                .catch(error => console.error('Error fetching messages:', error));
+        }
+        function updateMessages(messages) {
+            const messagesContainer = document.getElementById('messages-container');
+            messagesContainer.innerHTML = '';
+
+            if (messages.length > 0) {
+                messages.forEach(msg => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('message');
+                    messageDiv.setAttribute('data-id', msg.id);
+
+                    messageDiv.innerHTML = `
+                        <p>
+                            <strong>${msg.sender.firstName} ${msg.sender.lastName}</strong>
+                            <br>
+                            <div id="message_container">
+                                <p id="message_content">${msg.content}</p>
+                            </div>
+                        </p>
+                        <small><i>${msg.date}</i></small>
+                        ${msg.sender.Email === '<%= locals.user.Email %>' ? `
+                            <div>
+                                <button class="edit-btn" data-id="${msg.id}">Edit ✏️</button>
+                                <button class="delete-btn" data-id="${msg.id}">Delete 🗑️</button>
+                            </div>
+                        ` : ''}
+                    `;
+                    messagesContainer.appendChild(messageDiv);
+                });
+                attachMessageEventListeners();
+            } 
+            else
+                messagesContainer.innerHTML = '<p style="color: white;"><strong>No Messages Yet!</strong></p>';
+        }
+        fetchMessages();
+        const pollingInterval = <%= pollingInterval %>;
+        setInterval(fetchMessages, 1000 * pollingInterval);
+    </script>
 </html>

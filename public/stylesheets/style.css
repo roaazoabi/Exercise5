@@ -263,3 +263,9 @@ input {
   margin-top: 5px;
   color: #555;
 }
+.edit-btn, .save-btn, .delete-btn {
+  background: black;
+  color: white;
+  padding: 8px;
+  margin-top: 10px;
+}

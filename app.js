@@ -1,6 +1,8 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+// ------------------------------- Here is the pollin interval in seconds ----------------------------------------------------------
+const POLLING_INTERVAL = 10
 // ------------------------------- Here is the session timer in seconds ----------------------------------------------------------
 const SESSION_TIMEOUT = 10 *60
 var cookieParser = require('cookie-parser');
@@ -15,6 +17,8 @@ var password = require('./routes/password');
 var chat = require('./routes/chat');
 
 var app = express();
+app.locals.POLLING_INTERVAL = POLLING_INTERVAL;
+app.use(express.json());
 app.use(session({
   secret: 'roaa123',
   resave: false,
