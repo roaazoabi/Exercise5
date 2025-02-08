@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const messages_model = require('../models/message.js');
+const message = require('../models/message.js');
 router.get('/send', function(req, res) {
     if (!req.session.user)
         return res.redirect('/');
@@ -46,7 +47,7 @@ router.put('/edit/:id', (req, res) => {
     const user = req.session.user;
     if (!user)
         res.redirect('/')
-    messages_model.editMessage(id, new_content, user);    
+    messages_model.editMessage(id, new_content, user);  
 });
 
 router.delete('/delete/:id', (req, res) => {
@@ -56,9 +57,12 @@ router.delete('/delete/:id', (req, res) => {
         res.redirect('/')
     messages_model.deleteMessage(id, user);
 });
-
-router.get('/fetch', function(req, res) {
-    const messages = messages_model.fetchAll();
+router.get('/update',  async function(req, res) {
+    const lastUpdate = await messages_model.getUpdate();
+    res.json({lastUpdate})
+});
+router.get('/fetch',  async function(req, res) {
+    const messages = await messages_model.fetchAll();
     res.json({ messages });
 });
 

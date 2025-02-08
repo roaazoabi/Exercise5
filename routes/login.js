@@ -25,11 +25,12 @@ router.get('/', function(req, res, next) {
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-router.post('/', function (req, res) {
+router.post('/', async function (req, res) {
   var { "Email": Email, "Password": password } = req.body;
   Email = Email.trim();
   password = password.trim();
-  const user = users_module.getUsers().find(user => user.Email === Email);
+  const users = await users_module.getUsers();
+  const user = users.find(user => user.Email === Email);
   if (user) {
       if (user.Password === password) {
           req.session.user = user;

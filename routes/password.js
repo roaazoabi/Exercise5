@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-router.post('/', function(req, res, next) {
+router.post('/', async function(req, res, next) {
   const registeredDetails = req.cookies['Credintials'];
   if (!registeredDetails)
     res.redirect('/');
@@ -46,7 +46,8 @@ router.post('/', function(req, res, next) {
       var lastName = userDetails['lastName']
       var Email = userDetails['Email']
       current = {Email, firstName, lastName}
-      const emailExists = users_module.getUsers().some(user => user.Email === Email);
+      const users = await users_module.getUsers();
+      const emailExists =users.some(user => user.Email === Email);
       if (emailExists) {    
         res.render('register', {
         title: 'Registration Error',
@@ -57,7 +58,7 @@ router.post('/', function(req, res, next) {
       }
       else{
         const newUser = { Email,firstName,lastName, Password: password_1};
-        users_module.addUser(newUser);
+        await users_module.addUser(newUser);
         res.render('login', { title: 'Login', errorMessage: null, registered: "You are registered!"});
       }
     }

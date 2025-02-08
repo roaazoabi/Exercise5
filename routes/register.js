@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const users_module = require('../models/users.js'); 
-// ------------------------------- Here is the cookie timer in seconds ----------------------------------------------------------
-const REGISTER = 30; 
+const { use } = require('./chat.js');
 /**
  * GET route for displaying user details if stored in cookies.
  * If no cookie exists, renders a blank registration form.
@@ -38,14 +37,14 @@ router.get('/', function(req, res, next) {
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-router.post('/', function (req, res) {
+router.post('/', async function (req, res) {
   var { "Email": Email, "First Name": firstName, "Last Name": lastName } = req.body;
   Email = Email.trim();
   firstName = firstName.trim();
   lastName = lastName.trim();
   current = {Email, firstName, lastName}
-  const emailExists = users_module.getUsers().some(user => user.Email === Email);
-  const registeredDetails = req.cookies['Credintials'];
+  const users = await users_module.getUsers();
+  const emailExists = users.some(user => user.Email === Email);
   if (emailExists) {
     res.render('register', {
         title: 'Registration Error',
@@ -65,7 +64,7 @@ router.post('/', function (req, res) {
   else {
     const newUser = { Email, firstName, lastName };
     const userDataString = encodeURIComponent(JSON.stringify(newUser));
-    res.cookie('Credintials', userDataString, { maxAge: REGISTER * 1000, httpOnly: true });
+    res.cookie('Credintials', userDataString, { maxAge: req.app.locals.REGISTER * 1000, httpOnly: true });
     res.redirect('/password');
   }
 });

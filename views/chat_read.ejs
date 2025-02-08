@@ -45,6 +45,18 @@
         </div>
     </body>
     <script>
+        var lastUpdate = 0;
+        function checkUpdates(){
+            fetch(`/chat/update`)  
+                .then(response => response.json())
+                .then(data => {
+                    if (lastUpdate != data.lastUpdate){
+                        fetchMessages();
+                        lastUpdate = data.lastUpdate;
+                    }
+                })
+                .catch(error => console.error('Error fetching messages:', error));
+        }
         function attachMessageEventListeners() {
             document.querySelectorAll('.edit-btn').forEach(button => {
             button.addEventListener('click', (event) => {
@@ -64,8 +76,7 @@
                 .then(response => response.json())
                 .then(data => {})
                 .catch(error => console.error('Error:', error));
-                location.reload();
-            } 
+                fetchMessages()            } 
             else {
                 let messageContent = paragraph.textContent;
                 inputTextbox = document.createElement("input");
@@ -87,12 +98,12 @@
                 .then(response => response.json())
                 .then(data => {})
                 .catch(error => console.error('Error:', error));
-                location.reload();
+                fetchMessages();
             });
         });
         }
         function fetchMessages() {
-            fetch('/chat/fetch/')  
+            fetch(`/chat/fetch`)  
                 .then(response => response.json())
                 .then(data => {
                     updateMessages(data.messages);
@@ -133,7 +144,8 @@
                 messagesContainer.innerHTML = '<p style="color: white;"><strong>No Messages Yet!</strong></p>';
         }
         fetchMessages();
+        checkUpdates();
         const pollingInterval = <%= pollingInterval %>;
-        setInterval(fetchMessages, 1000 * pollingInterval);
+        setInterval(checkUpdates, 1000 * pollingInterval);
     </script>
 </html>
