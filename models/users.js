@@ -1,50 +1,68 @@
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./users.db');
-db.serialize(() => {
-  db.run(`CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Email TEXT UNIQUE,
-    firstName TEXT,
-    lastName TEXT,
-    password TEXT
-  )`);
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: './users.db'
 });
-
+const User = sequelize.define('User', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    Email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
+    },
+    firstName: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    lastName: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+}, {
+    tableName: 'users',
+    timestamps: false
+});
+sequelize.sync();
 module.exports = {
-  getUsers: () => {
-    return new Promise((resolve, reject) => {
-      db.all("SELECT * FROM users", (err, rows) => {
-        if (err) {
-          reject(err);
+    getUsers: async () => {
+        try {
+            const users = await User.findAll();
+            return users.map(user => ({
+                Email: user.Email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                Password: user.password
+            }));
         } 
-        else {
-          const users = rows.map(row => ({
-            Email: row.Email,
-            firstName: row.firstName,
-            lastName: row.lastName,
-            Password: row.password,
-          }));
-          resolve(users);
+        catch (error) {
+            throw error;
         }
-      });
-    });
-  },
-  addUser: (user) => {
-    return new Promise((resolve, reject) => {
-      const query = "INSERT INTO users (Email, firstName, lastName, password) VALUES (?, ?, ?, ?)";
-      db.run(query, [user.Email, user.firstName, user.lastName, user.Password], function(err) {
-        if (err) {
-          reject(err);
+    },
+    addUser: async (user) => {
+        try {
+            const newUser = await User.create({
+                Email: user.Email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                password: user.Password
+            });
+            return {
+                Email: newUser.Email,
+                firstName: newUser.firstName,
+                lastName: newUser.lastName,
+                Password: newUser.password
+            };
         } 
-        else {
-          resolve({
-            Email: user.Email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            Password: user.Password
-          });
+        catch (error) {
+            throw error;
         }
-      });
-    });
-  }
+    }
 };

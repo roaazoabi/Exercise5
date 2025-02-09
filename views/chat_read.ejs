@@ -50,6 +50,7 @@
             fetch(`/chat/update`)  
                 .then(response => response.json())
                 .then(data => {
+                    console.log(lastUpdate, data.lastUpdate)
                     if (lastUpdate != data.lastUpdate){
                         fetchMessages();
                         lastUpdate = data.lastUpdate;

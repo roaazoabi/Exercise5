@@ -45,12 +45,4 @@
             <% } %>
         </div>
     </body>
-    <script>
-        function fetchMessages() {
-            location.reload();
-        }
-        
-        const pollingInterval = <%= pollingInterval %>;
-        setInterval(fetchMessages, 1000 * pollingInterval);
-    </script>
 </html>

@@ -17,7 +17,7 @@ router.get('/search', function(req, res) {
     if (!req.session.user) {
         return res.redirect('/');
     }
-    res.render('chat_search', { title: 'Chat Room', user: req.session.user, messages: null, pollingInterval: req.app.locals.POLLING_INTERVAL});
+    res.render('chat_search', { title: 'Chat Room', user: req.session.user, messages: null});
 });
 router.get('/logout', function(req, res) {
     req.session.destroy(() => {
@@ -33,12 +33,13 @@ router.post('/send', function(req, res, next) {
     messages_model.addMessage(message, user);
 });
 
-router.post('/search', function(req, res, next) {
+router.post('/search',async function(req, res, next) {
     var {"Message": message} = req.body;
     var user = req.session.user;
     if (!user)
         res.redirect('/')
-    res.render('chat_search', { title: 'Chat Room', user: req.session.user, messages: messages_model.searchMessage(message), pollingInterval: req.app.locals.POLLING_INTERVAL});
+    var result = await messages_model.searchMessage(message);
+    res.render('chat_search', { title: 'Chat Room', user: req.session.user, messages:result});
 });
 
 router.put('/edit/:id', (req, res) => {
